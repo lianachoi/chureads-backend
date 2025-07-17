@@ -16,12 +16,13 @@ const OPENAI_API_KEY=process.env.OPENAI_API_KEY;
 app.use(express.json());
 app.use(express.urlencoded({extended: true}))
 
-//router middleware 등록 - express에서 라우터 등록
-// /posts , /posts/:id 등
-app.use("/posts", postsRouter);
 
 //cors 설정
 app.use(cors()); //cors(): 모든 도메인 허용
+
+//router middleware 등록 - express에서 라우터 등록
+// /posts , /posts/:id 등
+app.use("/posts", postsRouter);
 
 app.listen(PORT,async ()=>{
     console.log("Server running at...", PORT);
