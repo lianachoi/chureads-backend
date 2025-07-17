@@ -1,8 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import { testTagGenerate } from "./services/tagService.js";
-import postsRouter from "./routes/posts.js";
-
+import postsRouter, { init } from "./routes/posts.js";
+import { connectDB } from "./database/db.js";
+import cors from 'cors';
 
 //환경변수 로드
 dotenv.config(); // 전역으로 로드-> 모든 js모듈 내에서 접근 가능
@@ -19,8 +20,13 @@ app.use(express.urlencoded({extended: true}))
 // /posts , /posts/:id 등
 app.use("/posts", postsRouter);
 
-app.listen(PORT,()=>{
+//cors 설정
+app.use(cors()); //cors(): 모든 도메인 허용
+
+app.listen(PORT,async ()=>{
     console.log("Server running at...", PORT);
     console.log("🚀 ~ OPENAI_API_KEY:", OPENAI_API_KEY)
     //testTagGenerate();
+    const db = await connectDB();
+    init(db);
 })

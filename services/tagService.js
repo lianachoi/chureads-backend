@@ -9,7 +9,7 @@ const openai = new OpenAI({
 })
 //태그생성코드
 
-const createTagPrompt = (content) => {
+export const createTagPrompt = (content) => {
  return [
    {
      role: "system",
