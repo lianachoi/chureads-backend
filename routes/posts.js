@@ -59,20 +59,18 @@ router.post("/", async (req, res)=>{
 router.put("/:id", async (req, res)=>{
     try {
         const id = req.params;
-        const {post, likeCount, likedUsers, createdAt} = req.body;
+        const {content, likeCount, likedUsers, createdAt} = req.body;
         
         const result = await collection.updateOne({
             _id: new ObjectId(id)
-        }, {$set: {post: post,updatedAt: new Date()}});
+        }, {$set: {content: content,updatedAt: new Date()}});
         
         if(result.matchedCount == 0) {
             res.status(404).json({
                 "message": "There is no matched post."
             })
         }
-        res.status(201).json({
-                "message": `${result.matchedCount} row(s) has been updated`
-            });
+        res.status(201).json(result);
     } catch (error) {
         console.log(`⚠ update Error: ${error}`);
         res.status(500).json({
