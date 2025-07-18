@@ -1,9 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
-import { testTagGenerate } from "./services/tagService.js";
+//import { testTagGenerate } from "./services/tagService.js";
 import postsRouter, { init } from "./routes/posts.js";
 import { connectDB } from "./database/db.js";
 import cors from 'cors';
+import { handleSSEConnection } from "./sse/sseManager.js";
 
 //환경변수 로드
 dotenv.config(); // 전역으로 로드-> 모든 js모듈 내에서 접근 가능
@@ -19,6 +20,9 @@ app.use(express.urlencoded({extended: true}))
 
 //cors 설정
 app.use(cors()); //cors(): 모든 도메인 허용
+
+//sse 연결설정
+app.get("/events", handleSSEConnection);
 
 //router middleware 등록 - express에서 라우터 등록
 // /posts , /posts/:id 등

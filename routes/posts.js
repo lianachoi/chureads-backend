@@ -2,6 +2,7 @@ import express from 'express';
 import { connectDB } from '../database/db.js';
 import { ObjectId } from 'mongodb';
 import { createTagPrompt, generateTags } from '../services/tagService.js';
+import { broadcastToClients } from '../sse/sseManager.js';
 
 // 게시물 관련 모든 API 엔드포인트를 관리하는 라우터
 const router = express.Router();//라우터를 모듈화시키기 위해서
@@ -47,7 +48,15 @@ router.post("/", async (req, res)=>{
             likeCount: 0,
             likedUsers: [], //좋아요 한 UserID목록
             createdAt: new Date(),
-        });        
+        });    
+        //새 게시물 알림을 모든 클라이언트에게 전송
+        broadcastToClients("newPost", {
+            postId: result.insertedId,
+            userName: post.userName,
+            content: post.content.substring(0,20)+(post.content.length > 20? "...":""),
+            createdAt: post.createdAt,
+            message: `${post.userName}이 새 글을 작성했습니다!`
+        })    
         console.log("🚀 ~ router.post ~ post:", post)
         res.status(200).json({...result, tagArr });
     } catch (error) {
