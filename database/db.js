@@ -8,7 +8,8 @@ export const connectDB = async () => {
         if (db) {
             return db;
         }
-        const MONGODB_URI = process.env.MONGODB_URI_LOCAL;
+        const MONGODB_URI = process.env.NODE_ENV === "development"? 
+        process.env.MONGODB_URI_LOCAL : process.env.MONGODB_URI_ATLAS;
         const DB_NAME = process.env.DB_NAME;
 
         const client = new MongoClient(MONGODB_URI);
